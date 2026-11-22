@@ -1,3 +1,25 @@
-## Шаблон для третьего ДЗ по ИПР
+## РЕДМИ
 
 Условие дз доступно по [ссылке](https://github.com/Nikfilk2030/missing_semester_hse_cs/blob/main/2026/amcs/year_1/hw_3/README.md)
+
+
+## Запуск
+
+Нужен запущенный Docker. В папке проекта:
+
+cp .env.example .env
+docker compose up -d --build
+
+Адрес приложения: http://127.0.0.1:8080/ Порт и приветствие можно поменять в `.env`
+
+## Проверка
+
+Увеличить счётчик:
+
+curl -X POST http://127.0.0.1:8080/increment
+
+После `docker compose down` и `docker compose up -d` счётчик сохранился.
+
+Также я останавливал Redis командой `docker compose stop redis`. В этот момент `/healthz` отвечал `200`, а `/readyz` и `/increment` отвечали `503`. После `docker compose start redis` приложение снова работало без перезапуска, счётчик сохранился.
+
+У обоих контейнеров в `docker compose ps` был статус `healthy`.
