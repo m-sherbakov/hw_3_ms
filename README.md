@@ -23,3 +23,25 @@ curl -X POST http://127.0.0.1:8080/increment
 Также я останавливал Redis командой `docker compose stop redis`. В этот момент `/healthz` отвечал `200`, а `/readyz` и `/increment` отвечали `503`. После `docker compose start redis` приложение снова работало без перезапуска, счётчик сохранился.
 
 У обоих контейнеров в `docker compose ps` был статус `healthy`.
+
+# Результаты проверки Redis
+
+docker compose down
+docker compose up -d
+curl http://127.0.0.1:8080/
+
+Счётчик после повторного запуска: 1.
+
+docker compose stop redis
+curl -i http://127.0.0.1:8080/healthz
+curl -i http://127.0.0.1:8080/readyz
+curl -i -X POST http://127.0.0.1:8080/increment
+
+Ответы: 200, 503, 503.
+
+docker compose start redis
+curl -i http://127.0.0.1:8080/readyz
+curl http://127.0.0.1:8080/
+curl -X POST http://127.0.0.1:8080/increment
+
+Ответы: 200, счётчик 1, затем 2.
